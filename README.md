@@ -1,5 +1,53 @@
 # SpringMVC Hibernate Java Configuration
 
+1. Setup the database and tables. For example i'm creating a user, product, and order relation. There is going to be a Many to Many relation between products and orders. And One to Many relation between the user and orders.
+
+User Table
+```
+CREATE TABLE user (
+id INT PRIMARY KEY,
+first_name VARCHAR(40),
+last_name VARCHAR(40),
+email varchar(40),
+birth_day DATE,
+sex VARCHAR(1)
+);
+```
+
+Product Table
+```
+CREATE TABLE product (
+id INT PRIMARY KEY,
+name VARCHAR(40),
+price float
+);
+```
+
+Orders Table
+
+```
+CREATE TABLE orders (
+id INT PRIMARY KEY,
+user_id int references user.id,
+status boolean,
+FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+```
+Orders Products Table that is going to be used for the many to many mapping between orders and products.
+
+```
+CREATE TABLE orders_products (
+id INT PRIMARY KEY,
+order_id int,
+product_id int,
+quantity int,
+FOREIGN KEY (order_id) REFERENCES orders(id),
+FOREIGN KEY (product_id) REFERENCES product(id)
+);
+```
+
+
 
 1. Add these SpringMVC dependencies under the dependencies tag inside the pom.xml file
 
@@ -188,6 +236,41 @@ hibernate.show_sql = true
 hibernate.format_sql = true
 hibernate.hbm2ddl.auto = validate
 ```
+. Create the home controller class
+```
+@Controller
+public class HomeController {
+    @GetMapping("/")
+    public String index() {
+        return "home";
+    }
+}
 
 
+```
+
+. Create home.jsp under the src/web folder
+```
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+</head>
+<body>
+<h1>Home Page</h1>
+<a href="${pageContext.request.contextPath}/user/list">List Users</a>
+<a href="${pageContext.request.contextPath}/product/list">List Products</a>
+<a href="${pageContext.request.contextPath}/order/list">List Orders</a>
+</body>
+</html>
+```
+If you have nothing in the home page and want to be redirected use ```<% response.sendRedirect("customer/list");%>``` on the top of the file.
+
+
+
+To avoid "from" unexpected in queries add Hibernate to the modules.
 
