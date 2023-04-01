@@ -1,11 +1,11 @@
 # SpringMVC Hibernate Java Configuration
 
-1. Setup the database and tables. For example i'm creating a user, product, and order relation. There is going to be a Many to Many relation between products and orders. And One to Many relation between the user and orders.
+1. Setup the database and tables. For example i'm creating a customer, product, and order relation. There is going to be a Many to Many relation between products and orders. And One to Many relation between the customer and orders.
 
-User Table
+Customer Table
 ```
-CREATE TABLE user (
-id INT PRIMARY KEY,
+CREATE TABLE customer (
+id INT PRIMARY KEY AUTO_INCREMENT,
 first_name VARCHAR(40),
 last_name VARCHAR(40),
 email varchar(40),
@@ -17,7 +17,7 @@ sex VARCHAR(1)
 Product Table
 ```
 CREATE TABLE product (
-id INT PRIMARY KEY,
+id INT PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(40),
 price float
 );
@@ -27,10 +27,10 @@ Orders Table
 
 ```
 CREATE TABLE orders (
-id INT PRIMARY KEY,
-user_id int references user.id,
+id INT PRIMARY KEY AUTO_INCREMENT,
+customer_id int,
 status boolean,
-FOREIGN KEY (user_id) REFERENCES user(id)
+FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 
 ```
@@ -38,7 +38,7 @@ Orders Products Table that is going to be used for the many to many mapping betw
 
 ```
 CREATE TABLE orders_products (
-id INT PRIMARY KEY,
+id INT PRIMARY KEY AUTO_INCREMENT,
 order_id int,
 product_id int,
 quantity int,
